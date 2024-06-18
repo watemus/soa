@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  auth:
+    build: ./services/main
+    command: ./auth-service
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=qwerty
+    
+  tasks:
+    build: ./services/tasks
+    command: ./tasks-service
+    ports:
+      - 8228:8228
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=qwerty
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+    - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - 5436:5432

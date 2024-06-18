@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option go_package = "./proto;taskspb";
+
+message TaskSpec {
+    string author = 1;
+    string name = 2;
+    string body = 3;
+}
+
+message Task {
+    uint64 id = 1;
+    TaskSpec spec = 2;
+}
+
+message CommonRequest {
+    string username = 1;
+}
+
+message CreateTaskRequest {
+    CommonRequest common = 1;
+    string name = 2;
+    string body = 3;
+}
+
+message CreateTaskResponse {
+    uint64 task_id = 1;
+    string status = 2;
+}
+
+message UpdateTaskRequest {
+    CommonRequest common = 1;
+    uint64 task_id = 2;
+    string name = 3;
+    string body = 4;
+}
+
+message UpdateTaskResponse {
+    string status = 1;
+}
+
+message DeleteTaskRequest {
+    CommonRequest common = 1;
+    uint64 task_id = 2;
+}
+
+message DeleteTaskResponse {
+    string status = 1;
+}
+
+message GetTaskRequest {
+    CommonRequest common = 1;
+    uint64 task_id = 2;
+}
+
+message GetTaskResponse {
+    optional Task task = 1;
+    string status = 2;
+}
+
+message GetListTasksRequest {
+    CommonRequest common = 1;
+    uint64 offset = 2;
+    uint64 limit = 3;
+}
+
+message GetListTasksResponse {
+    Task task = 1;
+}
+
+service TaskService {
+    rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse) {}
+    rpc UpdateTask(UpdateTaskRequest) returns (UpdateTaskResponse) {}
+    rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse) {}
+    rpc GetTask(GetTaskRequest) returns (GetTaskResponse) {}
+    rpc GetListTasks(GetListTasksRequest) returns (stream GetListTasksResponse) {}
+}
