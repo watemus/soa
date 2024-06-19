@@ -86,6 +86,12 @@ func (s *Service) GetTask(ctx context.Context, req *taskspb.GetTaskRequest) (*ta
 			Task:   nil,
 		}, nil
 	}
+	if err != nil {
+		return &taskspb.GetTaskResponse{
+			Status: "not enough rights",
+			Task:   nil,
+		}, nil
+	}
 	return &taskspb.GetTaskResponse{
 		Status: "ok",
 		Task: &taskspb.Task{
@@ -104,7 +110,7 @@ func (s *Service) GetListTasks(
 	resp taskspb.TaskService_GetListTasksServer) error {
 	tasks := make(chan repository.Task)
 	done := make(chan struct{})
-	go s.repo.GetListTasks(req.Offset, req.Limit, tasks, done)
+	go s.repo.GetListTasks(req.Common.Username, req.Offset, req.Limit, tasks, done)
 	for {
 		select {
 		case task := <-tasks:

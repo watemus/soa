@@ -52,7 +52,7 @@ func (r *InMemoryRepo) GetTask(taskId uint64) (Task, error) {
 	return r.tasks[taskId], nil
 }
 
-func (r *InMemoryRepo) GetListTasks(offset uint64, limit uint64, tasks chan<- Task, done chan<- struct{}) {
+func (r *InMemoryRepo) GetListTasks(username string, offset uint64, limit uint64, tasks chan<- Task, done chan<- struct{}) {
 	pos := 0
 	count := 0
 	for uint64(count) < offset && pos < len(r.tasks) {

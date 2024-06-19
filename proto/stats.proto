@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "./proto_stat;taskspb";
+
+message StatTaskRequest {
+    uint64 task_id = 1;
+}
+
+message StatTaskResponse {
+    uint64 views = 1;
+    uint64 likes = 2;
+    string status = 3;
+}
+
+message TopRequest {
+    string order_by = 1;
+}
+
+
+
+message TopTaskResponse {
+    uint64 task_id = 1;
+    uint64 count = 2;
+}
+
+message TopUsersResponse {
+    string username = 1;
+    uint64 count = 2;
+}
+
+service StatsService {
+    rpc StatTask(StatTaskRequest) returns (StatTaskResponse) {}
+    rpc TopTask(TopRequest) returns (stream TopTaskResponse) {}
+    rpc TopUser(google.protobuf.Empty) returns (stream TopUsersResponse) {}
+}

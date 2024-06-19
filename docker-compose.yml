@@ -1,6 +1,27 @@
-version: '3.8'
-
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka
+    environment:
+      KAFKA_BROKER_ID: 228
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_MIN_INSYNC_REPLICAS: '1'
+    networks:
+      - default
+    depends_on:
+      - zookeeper
+
   auth:
     build: ./services/main
     command: ./auth-service
@@ -8,8 +29,11 @@ services:
       - 8080:8080
     depends_on:
       - db
+      - kafka
     environment:
       - DB_PASSWORD=qwerty
+    networks:
+      - default
     
   tasks:
     build: ./services/tasks
@@ -20,6 +44,20 @@ services:
       - db
     environment:
       - DB_PASSWORD=qwerty
+    networks:
+      - default
+  
+  # stats:
+  #   build: ./services/stats
+  #   command: ./stats-service
+  #   ports:
+  #     - 8229:8228
+  #   depends_on:
+  #     - ch_server
+  #   environment:
+  #     - DB_PASSWORD=qwerty
+  #   networks:
+  #     - default
 
   db:
     restart: always
@@ -30,3 +68,33 @@ services:
       - POSTGRES_PASSWORD=qwerty
     ports:
       - 5436:5432
+    networks:
+      - default
+
+  db-tasks:
+    restart: always
+    image: postgres:latest
+    volumes:
+    - ./.database-tasks/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - 5437:5432
+    networks:
+      - default
+  
+  ch_server:
+    image: yandex/clickhouse-server
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./.chdb:/var/lib/clickhouse
+    depends_on:
+      - kafka
+    networks:
+      - default
+    
+networks:
+  default:
+    driver: bridge

@@ -34,7 +34,14 @@ func main() {
 	}
 
 	authService := service.NewAuthService(authRepo)
-	handlers := handler.NewHandler(authService, tasksRepo)
+
+	kafka, err := repository.NewStatistics()
+	if err != nil {
+		log.Fatalf("error while creating kafka: %v", err)
+	}
+	eventService := service.NewEvents(kafka)
+
+	handlers := handler.NewHandler(authService, tasksRepo, eventService)
 
 	routes := handlers.InitRoutes()
 

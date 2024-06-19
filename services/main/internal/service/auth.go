@@ -95,3 +95,7 @@ func (s *AuthService) UpdateUser(username string, body *server.UpdateUserBody) e
 	err := s.repo.UpdateUser(username, body)
 	return err
 }
+
+func (s *AuthService) DoesUserExist(username string) (bool, error) {
+	return s.repo.DoesUserExist(username)
+}

@@ -1,4 +1,6 @@
+.chdb
 .idea
 .env
 .database
+.database-tasks
 .DS_Store

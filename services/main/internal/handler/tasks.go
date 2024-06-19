@@ -16,6 +16,18 @@ type CreateTaskResponse struct {
 	Status string `json:"status"`
 }
 
+// @Summary CreateTask
+// @Tags tasks
+// @Description create task
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body CreateTaskRequest true "params"
+// @Success 200 {object} CreateTaskResponse
+// @Failure 400,401,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/create-task [post]
 func (h *Handler) createTask(c *gin.Context) {
 	username, err := h.getUsername(c)
 	if err != nil {
@@ -59,6 +71,18 @@ type UpdateTaskResponse struct {
 	Status string `json:"status"`
 }
 
+// @Summary UpdateTask
+// @Tags tasks
+// @Description update task
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body UpdateTaskRequest true "params"
+// @Success 200 {object}  UpdateTaskResponse
+// @Failure 400,401,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/create-task [post]
 func (h *Handler) updateTask(c *gin.Context) {
 	username, err := h.getUsername(c)
 	if err != nil {
@@ -100,6 +124,18 @@ type DeleteTaskResponse struct {
 	Status string `json:"status"`
 }
 
+// @Summary DeleteTask
+// @Tags tasks
+// @Description delete task
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body DeleteTaskRequest true "params"
+// @Success 200 {object}  DeleteTaskResponse
+// @Failure 400,401,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/delete-task [post]
 func (h *Handler) deleteTask(c *gin.Context) {
 	username, err := h.getUsername(c)
 	if err != nil {
@@ -142,6 +178,18 @@ type GetTaskResponse struct {
 	Body   string `json:"body"`
 }
 
+// @Summary GetTask
+// @Tags tasks
+// @Description get task
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body GetTaskRequest true "params"
+// @Success 200 {object} GetTaskResponse
+// @Failure 400,401,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/get-task [get]
 func (h *Handler) getTask(c *gin.Context) {
 	username, err := h.getUsername(c)
 	if err != nil {
@@ -185,6 +233,18 @@ type GetListTasksResponse struct {
 	Tasks []*GetTaskResponse `json:"tasks"`
 }
 
+// @Summary GetListTasks
+// @Tags tasks
+// @Description get list of tasks
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body GetListTasksRequest true "params"
+// @Success 200 {object} GetListTasksResponse
+// @Failure 400,401,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/get-list-tasks [get]
 func (h *Handler) getListTasks(c *gin.Context) {
 	username, err := h.getUsername(c)
 	if err != nil {

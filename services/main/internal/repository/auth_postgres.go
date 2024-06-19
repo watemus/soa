@@ -42,6 +42,20 @@ func (r *AuthPostgres) ValidateUser(username string, password Hashed) (bool, err
 	return true, nil
 }
 
+func (r *AuthPostgres) DoesUserExist(username string) (bool, error) {
+	var user User
+	query := "SELECT id FROM users WHERE username=$1"
+	err := r.db.Get(&user, query, username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, errors.New("user not found")
+		}
+		log.Printf("error while validating user %s", err.Error())
+		return false, errors.New("error while validating user")
+	}
+	return true, nil
+}
+
 func (r *AuthPostgres) UpdateUser(username string, body *server.UpdateUserBody) error {
 	query := "UPDATE users SET first_name=$2,  last_name=$3, birth_date=$4, email=$5, phone_number=$6 WHERE username=$1"
 	_, err := r.db.Exec(query, username, body.FirstName, body.LastName, body.BirthDate, body.Email, body.PhoneNumber)
